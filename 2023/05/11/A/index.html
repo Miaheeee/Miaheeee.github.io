@@ -108,7 +108,7 @@
     <div class="article-entry" itemprop="articleBody">
        
   <hr>
-<h2 id="layout-posttitle-Text-Classificationdate-2023-05-11-14-19-38tags-technology"><a href="#layout-posttitle-Text-Classificationdate-2023-05-11-14-19-38tags-technology" class="headerlink" title="layout:  - posttitle: Text Classificationdate: 2023-05-11 14:19:38tags:technology"></a>layout:<br>  - post<br>title: Text Classification<br>date: 2023-05-11 14:19:38<br>tags:technology</h2><h3 id="A-算法"><a href="#A-算法" class="headerlink" title="A*算法"></a>A*算法</h3><p>A* 算法维护一个优先级队列，结点的优先级由$f(n)$的值决定，$f(n)$值越小，结点的优先级越高。$f(n) = g(n)+h(n)$，其中$g(n)$为结点从起始状态到当前状态所花费的代价，$h(n)$为当前状态到终止状态距离的估计代价，为启发式函数。当$h(n)$小于等于结点n到终止状态的实际代价，则A* 算法一定能找到最优路径。</p>
+<h3 id="A-算法"><a href="#A-算法" class="headerlink" title="A*算法"></a>A*算法</h3><p>A* 算法维护一个优先级队列，结点的优先级由$f(n)$的值决定，$f(n)$值越小，结点的优先级越高。$f(n) = g(n)+h(n)$，其中$g(n)$为结点从起始状态到当前状态所花费的代价，$h(n)$为当前状态到终止状态距离的估计代价，为启发式函数。当$h(n)$小于等于结点n到终止状态的实际代价，则A* 算法一定能找到最优路径。</p>
 <p>以下为 A* 的伪代码：</p>
 <pre class="line-numbers language-python" data-language="python"><code class="language-python">初始化优先级队列OPEN，CLOSE<span class="token punctuation">(</span>OPEN里为待展开的结点，CLOSE中表示已经展开的结点<span class="token punctuation">)</span>
 将初始状态加入OPEN
@@ -274,6 +274,15 @@
 
    
   <nav class="article-nav">
+    
+      <a href="/2023/05/11/%E6%80%BB%E7%BB%93%E4%B8%8E%E5%8F%8D%E6%80%9D/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            总结与反思
+          
+        </div>
+      </a>
     
     
       <a href="/2023/05/08/hello-world/" class="article-nav-link">
