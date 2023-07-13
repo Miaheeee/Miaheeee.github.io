@@ -1,111 +1,117 @@
-<?xml version="1.0" encoding="utf-8"?>
-<search>
-  <entry>
-    <title>A*</title>
-    <url>/2023/07/09/A/</url>
-    <content><![CDATA[<hr>
-<h3 id="A-算法"><a href="#A-算法" class="headerlink" title="A*算法"></a>A*算法</h3><p>A* 算法维护一个优先级队列，结点的优先级由$f(n)$的值决定，$f(n)$值越小，结点的优先级越高。$f(n) = g(n)+h(n)$，其中$g(n)$为结点从起始状态到当前状态所花费的代价，$h(n)$为当前状态到终止状态距离的估计代价，为启发式函数。当$h(n)$小于等于结点n到终止状态的实际代价，则A* 算法一定能找到最优路径。</p>
-<p>以下为 A* 的伪代码：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">初始化优先级队列OPEN，CLOSE<span class="token punctuation">(</span>OPEN里为待展开的结点，CLOSE中表示已经展开的结点<span class="token punctuation">)</span>
-将初始状态加入OPEN
-<span class="token keyword">while</span> OPEN<span class="token punctuation">:</span>
-	n⬅OPEN中弹出优先级最高的结点
-	将n加入CLOSE
-	如果n为终止结点<span class="token punctuation">:</span>
-		找n的parent，直到起始状态
-		<span class="token keyword">return</span>
-	遍历n的邻近结点m<span class="token punctuation">:</span>
-		如果m在CLOSE中<span class="token punctuation">:</span>
-			<span class="token keyword">continue</span>
-		如果m也不在OPEN中<span class="token punctuation">:</span>
-			设置m的parent为n
-			将m加入OPEN中<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<!DOCTYPE html>
 
-<h3 id="Q-森林宝石的秘密通道"><a href="#Q-森林宝石的秘密通道" class="headerlink" title="Q: 森林宝石的秘密通道"></a>Q: 森林宝石的秘密通道</h3><p><strong>题目描述：</strong></p>
-<p>在一个神秘的森林里，有一块由9个小方格组成的魔法石板。石板上有8个宝石，每个宝石上刻有1-8中的一个数字(每个数字都不重复）。石板上还有一个空位，用0表示。通过移动空位周围的宝石，你可以改变宝石的位置。传说中，当宝石按照某个特定的顺序排列时(本题设为135702684)，魔法石板将会显露出通往一个宝藏的秘密通道。<br>现在，你站在这块魔法石板前，需要找到一种最少步骤的移动方法，将宝石排列成目标顺序。为了解开这个谜题，请使用A*算法来设计一个程序，帮助你从初始状态成功解锁秘密通道。</p>
-<p><strong>要求：要求只能用A*算法。</strong></p>
-<p><strong>输入格式：</strong>一行介个数字，空格用0表示，除0之外，分别表示从左到右从上到下的对应宝石上的数字。</p>
-<p><strong>输入格式：</strong>只有一行，该行只有一个数字，表示从初始状态到目标状态需要的最少移动次数(测试数据中无特殊无法到达目标状态数据)。</p>
-<p><strong>输入输出样例：</strong></p>
-<p>输入：150732684</p>
-<p>输出：2</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># 该函数返回启发式函数的值，current_node为当前结点矩阵，goal_node为目标结点矩阵</span>
-<span class="token keyword">def</span> <span class="token function">heuristic_f</span><span class="token punctuation">(</span>current_node<span class="token punctuation">,</span> goal_node<span class="token punctuation">)</span><span class="token punctuation">:</span>
-    h <span class="token operator">=</span> <span class="token number">0</span>
-    rows <span class="token operator">=</span> current_node<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
-    cols <span class="token operator">=</span> current_node<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
-    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>rows<span class="token punctuation">)</span><span class="token punctuation">:</span>
-        <span class="token keyword">for</span> j <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>cols<span class="token punctuation">)</span><span class="token punctuation">:</span>
-            <span class="token keyword">if</span> current_node<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">!=</span> goal_node<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token keyword">and</span> current_node<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token operator">!=</span><span class="token number">0</span><span class="token punctuation">:</span>
-                goal_x <span class="token operator">=</span> np<span class="token punctuation">.</span>argwhere<span class="token punctuation">(</span>goal_node<span class="token operator">==</span>current_node<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
-                goal_y <span class="token operator">=</span> np<span class="token punctuation">.</span>argwhere<span class="token punctuation">(</span>goal_node<span class="token operator">==</span>current_node<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
-                h <span class="token operator">+=</span> <span class="token punctuation">(</span><span class="token builtin">abs</span><span class="token punctuation">(</span>i<span class="token operator">-</span>goal_x<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token builtin">abs</span><span class="token punctuation">(</span>j<span class="token operator">-</span>goal_y<span class="token punctuation">)</span><span class="token punctuation">)</span>
-    <span class="token keyword">return</span> h<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
-<p>将open_list定义为一个按照f升序排列的列表，其中为待展开的结点，close_list中存储已经展开的结点。当open_list不为空时，每次弹出第一个结点。</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-    <span class="token comment"># 每个结点用一个字典表示</span>
-    start <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
-    input_order <span class="token operator">=</span> <span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-    <span class="token comment"># 初始化3*3的输入矩阵</span>
-    input_order <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token builtin">int</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token keyword">for</span> x <span class="token keyword">in</span> input_order<span class="token punctuation">]</span>
-    start_node <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>input_order<span class="token punctuation">)</span><span class="token punctuation">.</span>reshape<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>
-    start<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span> <span class="token operator">=</span> start_node
-    start<span class="token punctuation">[</span><span class="token string">'parent'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
-    start<span class="token punctuation">[</span><span class="token string">'steps'</span><span class="token punctuation">]</span> <span class="token operator">=</span> get_steps<span class="token punctuation">(</span>start<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-    start<span class="token punctuation">[</span><span class="token string">'g'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span>
-    start<span class="token punctuation">[</span><span class="token string">'h'</span><span class="token punctuation">]</span> <span class="token operator">=</span> heuristic_f<span class="token punctuation">(</span>start<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> goal<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-    start<span class="token punctuation">[</span><span class="token string">'f'</span><span class="token punctuation">]</span> <span class="token operator">=</span> start<span class="token punctuation">[</span><span class="token string">'g'</span><span class="token punctuation">]</span> <span class="token operator">+</span> start<span class="token punctuation">[</span><span class="token string">'h'</span><span class="token punctuation">]</span>
-    <span class="token comment"># openlist中存储待展开的结点，closelist中存储已经展开的节点</span>
-    openlist <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-    closelist <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-    openlist<span class="token punctuation">.</span>append<span class="token punctuation">(</span>start<span class="token punctuation">)</span>
-    <span class="token keyword">while</span> openlist<span class="token punctuation">:</span>
-        current <span class="token operator">=</span> openlist<span class="token punctuation">.</span>pop<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
-        closelist<span class="token punctuation">.</span>append<span class="token punctuation">(</span>current<span class="token punctuation">)</span>
-        <span class="token comment"># 如果当前展开的结点与目标结点一致，则返回</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>current<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span> <span class="token operator">==</span> goal<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">all</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-            <span class="token keyword">print</span><span class="token punctuation">(</span>current<span class="token punctuation">[</span><span class="token string">'g'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-            p_list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-            p <span class="token operator">=</span> current
-            <span class="token keyword">while</span> p<span class="token punctuation">:</span>
-                p_list<span class="token punctuation">.</span>append<span class="token punctuation">(</span>p<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'node'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-                p <span class="token operator">=</span> p<span class="token punctuation">[</span><span class="token string">'parent'</span><span class="token punctuation">]</span>
-            p_list<span class="token punctuation">.</span>reverse<span class="token punctuation">(</span><span class="token punctuation">)</span>
-            <span class="token comment"># print(p_list)</span>
-            <span class="token keyword">return</span>
-        children <span class="token operator">=</span> get_children<span class="token punctuation">(</span>current<span class="token punctuation">)</span>
-        <span class="token keyword">for</span> child <span class="token keyword">in</span> children<span class="token punctuation">:</span>
-            <span class="token comment"># 判断该结点是否出现和待展开的结点列表和已经展开的结点列表</span>
-            exist_open <span class="token operator">=</span> <span class="token boolean">False</span>
-            exist_close <span class="token operator">=</span> <span class="token boolean">False</span>
-            <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>openlist<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-                <span class="token keyword">if</span> <span class="token punctuation">(</span>child<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span> <span class="token operator">==</span> openlist<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">all</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-                    exist_open <span class="token operator">=</span> <span class="token boolean">True</span>
-                    <span class="token comment"># 如果该孩子结点的f小于与它展开相等的在openlist结点的值，则用该孩子结点替代</span>
-                    <span class="token keyword">if</span> child<span class="token punctuation">[</span><span class="token string">'f'</span><span class="token punctuation">]</span> <span class="token operator">&lt;</span> openlist<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'f'</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
-                        <span class="token keyword">del</span> openlist<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
-                        openlist<span class="token punctuation">.</span>append<span class="token punctuation">(</span>child<span class="token punctuation">)</span>
-                        <span class="token keyword">break</span>
-            <span class="token keyword">for</span> j <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>closelist<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-                <span class="token keyword">if</span> <span class="token punctuation">(</span>child<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span> <span class="token operator">==</span> closelist<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">all</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-                    exist_close <span class="token operator">=</span> <span class="token boolean">True</span>
-                    <span class="token keyword">break</span>
-            <span class="token keyword">if</span> exist_open <span class="token operator">==</span> <span class="token boolean">False</span> <span class="token keyword">and</span> exist_close <span class="token operator">==</span> <span class="token boolean">False</span><span class="token punctuation">:</span>
-                openlist<span class="token punctuation">.</span>append<span class="token punctuation">(</span>child<span class="token punctuation">)</span>
-        openlist <span class="token operator">=</span> <span class="token builtin">sorted</span><span class="token punctuation">(</span>openlist<span class="token punctuation">,</span> key<span class="token operator">=</span>itemgetter<span class="token punctuation">(</span><span class="token string">'f'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-]]></content>
-      <categories>
-        <category>算法学习</category>
-      </categories>
-      <tags>
-        <tag>AI</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>中文纠错</title>
-    <url>/2023/07/13/%E4%B8%AD%E6%96%87%E7%BA%A0%E9%94%99/</url>
-    <content><![CDATA[<h2 id="一、任务"><a href="#一、任务" class="headerlink" title="一、任务"></a>一、任务</h2><p>中文拼写检测（Chinese Spelling Check ）旨在将句子中的错误拼写检测出来并进行纠正。这个任务是自然处理领域一个重要的任务。比如：当新闻中出现一些拼写错误或者不合适的词语使用，这个任务能帮助自动检测。常见的可能出现的错误包括相似字形出错、相似语义混淆出错等。</p>
+<html lang="zh-CN">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>中文纠错 |  Mia&#39;s Blog</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    <link rel="alternate" href="/atom.xml" title="Mia's Blog" type="application/atom+xml">
+
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+</head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+      <section class="outer">
+  <article
+  id="post-中文纠错"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  中文纠错
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/13/%E4%B8%AD%E6%96%87%E7%BA%A0%E9%94%99/" class="article-date">
+  <time datetime="2023-07-13T06:21:45.000Z" itemprop="datePublished">2023-07-13</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/">深度学习</a>
+  </div>
+  
+<div class="word_count">
+    <span class="post-time">
+        <span class="post-meta-item-icon">
+            <i class="ri-quill-pen-line"></i>
+            <span class="post-meta-item-text"> 字数统计:</span>
+            <span class="post-count">1.8k</span>
+        </span>
+    </span>
+
+    <span class="post-time">
+        &nbsp; | &nbsp;
+        <span class="post-meta-item-icon">
+            <i class="ri-book-open-line"></i>
+            <span class="post-meta-item-text"> 阅读时长≈</span>
+            <span class="post-count">7 分钟</span>
+        </span>
+    </span>
+</div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="一、任务"><a href="#一、任务" class="headerlink" title="一、任务"></a>一、任务</h2><p>中文拼写检测（Chinese Spelling Check ）旨在将句子中的错误拼写检测出来并进行纠正。这个任务是自然处理领域一个重要的任务。比如：当新闻中出现一些拼写错误或者不合适的词语使用，这个任务能帮助自动检测。常见的可能出现的错误包括相似字形出错、相似语义混淆出错等。</p>
 <p>输入：一个包含错误的自然语言句子</p>
 <p>输出：一个正确的自然语言句子</p>
 <h2 id="二、实现过程"><a href="#二、实现过程" class="headerlink" title="二、实现过程"></a>二、实现过程</h2><h3 id="2-1-seq2seq（加入注意力机制和中文预训练模型初始化的embedding）"><a href="#2-1-seq2seq（加入注意力机制和中文预训练模型初始化的embedding）" class="headerlink" title="2.1 seq2seq（加入注意力机制和中文预训练模型初始化的embedding）"></a>2.1 seq2seq（加入注意力机制和中文预训练模型初始化的embedding）</h3><p>使用eq2seq模型，将文本纠错任务转换为翻译任务，即输入带有错字的序列，输出纠正后的序列。</p>
@@ -212,7 +218,7 @@ decode_result <span class="token operator">=</span> out<span class="token punctu
 
 
 
-<h4 id="2-2-2使用shibing624-x2F-macbert4csc-base-chinese预训练模型"><a href="#2-2-2使用shibing624-x2F-macbert4csc-base-chinese预训练模型" class="headerlink" title="2.2.2使用shibing624/macbert4csc-base-chinese预训练模型"></a>2.2.2<strong>使用shibing624/macbert4csc-base-chinese预训练模型</strong></h4><p>模型下载地址：<a href="https://huggingface.co/shibing624/macbert4csc-base-chinese">shibing624/macbert4csc-base-chinese · Hugging Face</a></p>
+<h4 id="2-2-2使用shibing624-x2F-macbert4csc-base-chinese预训练模型"><a href="#2-2-2使用shibing624-x2F-macbert4csc-base-chinese预训练模型" class="headerlink" title="2.2.2使用shibing624/macbert4csc-base-chinese预训练模型"></a>2.2.2<strong>使用shibing624/macbert4csc-base-chinese预训练模型</strong></h4><p>模型下载地址：<a target="_blank" rel="noopener" href="https://huggingface.co/shibing624/macbert4csc-base-chinese">shibing624/macbert4csc-base-chinese · Hugging Face</a></p>
 <p>在本实验中，我已经将该模型下载后放在10205501458/gectoolkit/properties/model/RNN文件夹下</p>
 <p>修改softmaskedbert的模型结构：</p>
 <p>检测网络不再使用bert.embedding，而是使用bert全部模型，并取消其梯度，防止参数过导致过拟合，将结果输入线性层之后sigmoid激活。</p>
@@ -229,58 +235,487 @@ encoder_hidden_states<span class="token operator">=</span>encoder_hidden_states<
 encoder_attention_mask<span class="token operator">=</span>input_mask<span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
 
 <p>损失函数不变，同上softmaskedbert。</p>
-]]></content>
-      <categories>
-        <category>深度学习</category>
-      </categories>
-      <tags>
-        <tag>DL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/2023/07/01/hello-world/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+ 
+      <!-- reward -->
+      
+    </div>
+    
 
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo server<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+    <!-- copyright -->
+    
+    <div class="declare">
+      <ul class="post-copyright">
+        <li>
+          <i class="ri-copyright-line"></i>
+          <strong>版权声明： </strong>
+          
+          本博客所有文章除特别声明外，著作权归作者所有。转载请注明出处！
+          
+        </li>
+      </ul>
+    </div>
+    
+    <footer class="article-footer">
+       
+<div class="share-btn">
+      <span class="share-sns share-outer">
+        <i class="ri-share-forward-line"></i>
+        分享
+      </span>
+      <div class="share-wrap">
+        <i class="arrow"></i>
+        <div class="share-icons">
+          
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="ri-weibo-fill"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="ri-wechat-fill"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="ri-qq-fill"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="ri-douban-line"></i>
+          </a>
+          <!-- <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a> -->
+          
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="ri-facebook-circle-fill"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="ri-twitter-fill"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="ri-google-fill"></i>
+          </a>
+        </div>
+      </div>
+</div>
 
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo generate<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<div class="wx-share-modal">
+    <a class="modal-close" href="javascript:;"><i class="ri-close-circle-line"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://miaheeee.github.io/2023/07/13/%E4%B8%AD%E6%96%87%E7%BA%A0%E9%94%99/" alt="微信分享二维码">
+    </div>
+</div>
 
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash">$ hexo deploy<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<div id="share-mask"></div>  
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/DL/" rel="tag">DL</a></li></ul>
 
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
-  </entry>
-  <entry>
-    <title>总结与反思</title>
-    <url>/2023/07/14/%E6%80%BB%E7%BB%93%E4%B8%8E%E5%8F%8D%E6%80%9D/</url>
-    <content><![CDATA[<h2 id="博客框架"><a href="#博客框架" class="headerlink" title="博客框架"></a>博客框架</h2><p>本博客网站采用Hexo框架搭建，选取该框架的主要原因有以下几点：</p>
-<ul>
-<li><strong>渲染速度块</strong></li>
-</ul>
-<p>  Node.js 所带来的超快生成速度，让上百个页面在几秒内瞬间完成渲染。</p>
-<ul>
-<li><p><strong>支持markdown</strong></p>
-<p>Hexo 支持 GitHub Flavored Markdown 的所有功能，甚至可以整合 Octopress 的大多数插件。</p>
-</li>
-<li><p><strong>一键部署</strong></p>
-<p>只需一条指令即可部署到 GitHub Pages, Heroku 或其他平台。</p>
-</li>
-<li><p><strong>可扩展性强</strong></p>
-<p>强大的 API 带来无限的可能，与数种模板引擎（EJS，Pug，Nunjucks）和工具（Babel，PostCSS，Less/Sass）轻易集成</p>
-</li>
-</ul>
-<h2 id="博客主题"><a href="#博客主题" class="headerlink" title="博客主题"></a>博客主题</h2><p>本博客的主题为Ayer，可在Hexo官网的themes中下载。<a href="https://github.com/Shen-Yu/hexo-theme-ayer">Ayer</a> 是一个干净且优雅的 Hexo 主题，文章内容美观易读，首页封面全屏平铺，扁平化设计，简洁优美。</p>
-]]></content>
-      <categories>
-        <category>总结与反思</category>
-      </categories>
-      <tags>
-        <tag>博客</tag>
-      </tags>
-  </entry>
-</search>
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/14/%E6%80%BB%E7%BB%93%E4%B8%8E%E5%8F%8D%E6%80%9D/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            总结与反思
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/09/A/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">A*</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+   
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+      <li>
+        Copyrights &copy;
+        2023
+        <i class="ri-heart-fill heart_icon"></i> Yuqing He
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle"></button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer-side.svg" alt="Mia&#39;s Blog"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/friends">友链</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于我</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="搜索">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      
+      <a class="nav-item-link" target="_blank" href="/atom.xml" title="RSS Feed">
+        <i class="ri-rss-line"></i>
+      </a>
+      
+    </li>
+  </ul>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯奶茶吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    tocSelector: ".tocbot",
+    contentSelector: ".article-entry",
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    hasInnerContainers: true,
+    scrollSmooth: true,
+    scrollContainer: "main",
+    positionFixedSelector: ".tocbot",
+    positionFixedClass: "is-position-fixed",
+    fixedSidebarOffset: "auto",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+ <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+      tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+  });
+
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for(i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/mathjax/2.7.7/MathJax.js"></script>
+<script src="https://cdn.staticfile.org/mathjax/2.7.7/config/TeX-AMS-MML_HTMLorMML-full.js"></script>
+<script>
+  var ayerConfig = {
+    mathjax: true,
+  };
+</script>
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+ 
+<script src="/js/dz.js"></script>
+ 
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>
