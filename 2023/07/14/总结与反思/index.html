@@ -87,7 +87,7 @@
         <span class="post-meta-item-icon">
             <i class="ri-quill-pen-line"></i>
             <span class="post-meta-item-text"> 字数统计:</span>
-            <span class="post-count">486</span>
+            <span class="post-count">528</span>
         </span>
     </span>
 
@@ -122,6 +122,7 @@
 <li>友联：一些友情链接</li>
 <li>关于我：博客作者介绍</li>
 </ol>
+<p>左下角的搜索功能可以通过匹配关键字和文章内容对博客文章进行搜索。</p>
 <h2 id="三、博客功能实现及其技术选择"><a href="#三、博客功能实现及其技术选择" class="headerlink" title="三、博客功能实现及其技术选择"></a>三、博客功能实现及其技术选择</h2><p>本博客网站采用Hexo框架搭建，选取该框架的主要原因有以下几点：</p>
 <ul>
 <li><p><strong>渲染速度块</strong></p>
@@ -138,12 +139,13 @@
 </li>
 </ul>
 <h2 id="四、博客样式以及美学考量"><a href="#四、博客样式以及美学考量" class="headerlink" title="四、博客样式以及美学考量"></a>四、博客样式以及美学考量</h2><p>本博客的主题为Ayer，可在Hexo官网的themes中下载。<a target="_blank" rel="noopener" href="https://github.com/Shen-Yu/hexo-theme-ayer">Ayer</a> 是一个干净且优雅的 Hexo 主题，文章内容美观易读，首页封面全屏平铺，扁平化设计，简洁优美。</p>
-<h2 id="五、博客制作过程中遇到的问题及其解决方法"><a href="#五、博客制作过程中遇到的问题及其解决方法" class="headerlink" title="五、博客制作过程中遇到的问题及其解决方法"></a>五、博客制作过程中遇到的问题及其解决方法</h2><p>本地静态博客部署到github上时，出现无法显示的情况，问题出在无法连接到github仓库的http地址，后换为ssh连接，问题即可解决。</p>
+<h2 id="五、博客制作过程中遇到的问题及其解决方法"><a href="#五、博客制作过程中遇到的问题及其解决方法" class="headerlink" title="五、博客制作过程中遇到的问题及其解决方法"></a>五、博客制作过程中遇到的问题及其解决方法</h2><p>1.本地静态博客部署到github上时，出现无法显示的情况，问题出在无法连接到github仓库的http地址，后换为ssh连接，问题即可解决。</p>
 <pre class="line-numbers language-yaml" data-language="yaml"><code class="language-yaml"><span class="token key atrule">deploy</span><span class="token punctuation">:</span>
   <span class="token key atrule">type</span><span class="token punctuation">:</span> git
   <span class="token key atrule">repository</span><span class="token punctuation">:</span> git@github.com<span class="token punctuation">:</span>Miaheeee/Miaheeee.github.io.git
   <span class="token key atrule">branch</span><span class="token punctuation">:</span> main<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 
+<p>2.博客内无法显示图片</p>
  
       <!-- reward -->
       
