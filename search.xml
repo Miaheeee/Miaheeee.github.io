@@ -1,6 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>A*</title>
+    <url>/2023/07/09/A/</url>
+    <content><![CDATA[<hr>
+<h3 id="A-算法"><a href="#A-算法" class="headerlink" title="A*算法"></a>A*算法</h3><p>A* 算法维护一个优先级队列，结点的优先级由$f(n)$的值决定，$f(n)$值越小，结点的优先级越高。$f(n) = g(n)+h(n)$，其中$g(n)$为结点从起始状态到当前状态所花费的代价，$h(n)$为当前状态到终止状态距离的估计代价，为启发式函数。当$h(n)$小于等于结点n到终止状态的实际代价，则A* 算法一定能找到最优路径。</p>
+<p>以下为 A* 的伪代码：</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python">初始化优先级队列OPEN，CLOSE<span class="token punctuation">(</span>OPEN里为待展开的结点，CLOSE中表示已经展开的结点<span class="token punctuation">)</span>
+将初始状态加入OPEN
+<span class="token keyword">while</span> OPEN<span class="token punctuation">:</span>
+	n⬅OPEN中弹出优先级最高的结点
+	将n加入CLOSE
+	如果n为终止结点<span class="token punctuation">:</span>
+		找n的parent，直到起始状态
+		<span class="token keyword">return</span>
+	遍历n的邻近结点m<span class="token punctuation">:</span>
+		如果m在CLOSE中<span class="token punctuation">:</span>
+			<span class="token keyword">continue</span>
+		如果m也不在OPEN中<span class="token punctuation">:</span>
+			设置m的parent为n
+			将m加入OPEN中<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="Q-森林宝石的秘密通道"><a href="#Q-森林宝石的秘密通道" class="headerlink" title="Q: 森林宝石的秘密通道"></a>Q: 森林宝石的秘密通道</h3><p><strong>题目描述：</strong></p>
+<p>在一个神秘的森林里，有一块由9个小方格组成的魔法石板。石板上有8个宝石，每个宝石上刻有1-8中的一个数字(每个数字都不重复）。石板上还有一个空位，用0表示。通过移动空位周围的宝石，你可以改变宝石的位置。传说中，当宝石按照某个特定的顺序排列时(本题设为135702684)，魔法石板将会显露出通往一个宝藏的秘密通道。<br>现在，你站在这块魔法石板前，需要找到一种最少步骤的移动方法，将宝石排列成目标顺序。为了解开这个谜题，请使用A*算法来设计一个程序，帮助你从初始状态成功解锁秘密通道。</p>
+<p><strong>要求：要求只能用A*算法。</strong></p>
+<p><strong>输入格式：</strong>一行介个数字，空格用0表示，除0之外，分别表示从左到右从上到下的对应宝石上的数字。</p>
+<p><strong>输入格式：</strong>只有一行，该行只有一个数字，表示从初始状态到目标状态需要的最少移动次数(测试数据中无特殊无法到达目标状态数据)。</p>
+<p><strong>输入输出样例：</strong></p>
+<p>输入：150732684</p>
+<p>输出：2</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># 该函数返回启发式函数的值，current_node为当前结点矩阵，goal_node为目标结点矩阵</span>
+<span class="token keyword">def</span> <span class="token function">heuristic_f</span><span class="token punctuation">(</span>current_node<span class="token punctuation">,</span> goal_node<span class="token punctuation">)</span><span class="token punctuation">:</span>
+    h <span class="token operator">=</span> <span class="token number">0</span>
+    rows <span class="token operator">=</span> current_node<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+    cols <span class="token operator">=</span> current_node<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>rows<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">for</span> j <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>cols<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">if</span> current_node<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">!=</span> goal_node<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token keyword">and</span> current_node<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token operator">!=</span><span class="token number">0</span><span class="token punctuation">:</span>
+                goal_x <span class="token operator">=</span> np<span class="token punctuation">.</span>argwhere<span class="token punctuation">(</span>goal_node<span class="token operator">==</span>current_node<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
+                goal_y <span class="token operator">=</span> np<span class="token punctuation">.</span>argwhere<span class="token punctuation">(</span>goal_node<span class="token operator">==</span>current_node<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
+                h <span class="token operator">+=</span> <span class="token punctuation">(</span><span class="token builtin">abs</span><span class="token punctuation">(</span>i<span class="token operator">-</span>goal_x<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token builtin">abs</span><span class="token punctuation">(</span>j<span class="token operator">-</span>goal_y<span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token keyword">return</span> h<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>将open_list定义为一个按照f升序排列的列表，其中为待展开的结点，close_list中存储已经展开的结点。当open_list不为空时，每次弹出第一个结点。</p>
+<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+    <span class="token comment"># 每个结点用一个字典表示</span>
+    start <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    input_order <span class="token operator">=</span> <span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token comment"># 初始化3*3的输入矩阵</span>
+    input_order <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token builtin">int</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token keyword">for</span> x <span class="token keyword">in</span> input_order<span class="token punctuation">]</span>
+    start_node <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>input_order<span class="token punctuation">)</span><span class="token punctuation">.</span>reshape<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>
+    start<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span> <span class="token operator">=</span> start_node
+    start<span class="token punctuation">[</span><span class="token string">'parent'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    start<span class="token punctuation">[</span><span class="token string">'steps'</span><span class="token punctuation">]</span> <span class="token operator">=</span> get_steps<span class="token punctuation">(</span>start<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    start<span class="token punctuation">[</span><span class="token string">'g'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span>
+    start<span class="token punctuation">[</span><span class="token string">'h'</span><span class="token punctuation">]</span> <span class="token operator">=</span> heuristic_f<span class="token punctuation">(</span>start<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> goal<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+    start<span class="token punctuation">[</span><span class="token string">'f'</span><span class="token punctuation">]</span> <span class="token operator">=</span> start<span class="token punctuation">[</span><span class="token string">'g'</span><span class="token punctuation">]</span> <span class="token operator">+</span> start<span class="token punctuation">[</span><span class="token string">'h'</span><span class="token punctuation">]</span>
+    <span class="token comment"># openlist中存储待展开的结点，closelist中存储已经展开的节点</span>
+    openlist <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    closelist <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    openlist<span class="token punctuation">.</span>append<span class="token punctuation">(</span>start<span class="token punctuation">)</span>
+    <span class="token keyword">while</span> openlist<span class="token punctuation">:</span>
+        current <span class="token operator">=</span> openlist<span class="token punctuation">.</span>pop<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+        closelist<span class="token punctuation">.</span>append<span class="token punctuation">(</span>current<span class="token punctuation">)</span>
+        <span class="token comment"># 如果当前展开的结点与目标结点一致，则返回</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>current<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span> <span class="token operator">==</span> goal<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">all</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            <span class="token keyword">print</span><span class="token punctuation">(</span>current<span class="token punctuation">[</span><span class="token string">'g'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+            p_list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+            p <span class="token operator">=</span> current
+            <span class="token keyword">while</span> p<span class="token punctuation">:</span>
+                p_list<span class="token punctuation">.</span>append<span class="token punctuation">(</span>p<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'node'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+                p <span class="token operator">=</span> p<span class="token punctuation">[</span><span class="token string">'parent'</span><span class="token punctuation">]</span>
+            p_list<span class="token punctuation">.</span>reverse<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token comment"># print(p_list)</span>
+            <span class="token keyword">return</span>
+        children <span class="token operator">=</span> get_children<span class="token punctuation">(</span>current<span class="token punctuation">)</span>
+        <span class="token keyword">for</span> child <span class="token keyword">in</span> children<span class="token punctuation">:</span>
+            <span class="token comment"># 判断该结点是否出现和待展开的结点列表和已经展开的结点列表</span>
+            exist_open <span class="token operator">=</span> <span class="token boolean">False</span>
+            exist_close <span class="token operator">=</span> <span class="token boolean">False</span>
+            <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>openlist<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>child<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span> <span class="token operator">==</span> openlist<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">all</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                    exist_open <span class="token operator">=</span> <span class="token boolean">True</span>
+                    <span class="token comment"># 如果该孩子结点的f小于与它展开相等的在openlist结点的值，则用该孩子结点替代</span>
+                    <span class="token keyword">if</span> child<span class="token punctuation">[</span><span class="token string">'f'</span><span class="token punctuation">]</span> <span class="token operator">&lt;</span> openlist<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'f'</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
+                        <span class="token keyword">del</span> openlist<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+                        openlist<span class="token punctuation">.</span>append<span class="token punctuation">(</span>child<span class="token punctuation">)</span>
+                        <span class="token keyword">break</span>
+            <span class="token keyword">for</span> j <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>closelist<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>child<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span> <span class="token operator">==</span> closelist<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">all</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+                    exist_close <span class="token operator">=</span> <span class="token boolean">True</span>
+                    <span class="token keyword">break</span>
+            <span class="token keyword">if</span> exist_open <span class="token operator">==</span> <span class="token boolean">False</span> <span class="token keyword">and</span> exist_close <span class="token operator">==</span> <span class="token boolean">False</span><span class="token punctuation">:</span>
+                openlist<span class="token punctuation">.</span>append<span class="token punctuation">(</span>child<span class="token punctuation">)</span>
+        openlist <span class="token operator">=</span> <span class="token builtin">sorted</span><span class="token punctuation">(</span>openlist<span class="token punctuation">,</span> key<span class="token operator">=</span>itemgetter<span class="token punctuation">(</span><span class="token string">'f'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+]]></content>
+      <categories>
+        <category>算法学习</category>
+      </categories>
+      <tags>
+        <tag>AI</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Hello World</title>
     <url>/2023/07/01/hello-world/</url>
     <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
@@ -195,108 +297,6 @@ encoder_attention_mask<span class="token operator">=</span>input_mask<span class
       </categories>
       <tags>
         <tag>DL</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>A*</title>
-    <url>/2023/07/09/A/</url>
-    <content><![CDATA[<hr>
-<h3 id="A-算法"><a href="#A-算法" class="headerlink" title="A*算法"></a>A*算法</h3><p>A* 算法维护一个优先级队列，结点的优先级由$f(n)$的值决定，$f(n)$值越小，结点的优先级越高。$f(n) = g(n)+h(n)$，其中$g(n)$为结点从起始状态到当前状态所花费的代价，$h(n)$为当前状态到终止状态距离的估计代价，为启发式函数。当$h(n)$小于等于结点n到终止状态的实际代价，则A* 算法一定能找到最优路径。</p>
-<p>以下为 A* 的伪代码：</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python">初始化优先级队列OPEN，CLOSE<span class="token punctuation">(</span>OPEN里为待展开的结点，CLOSE中表示已经展开的结点<span class="token punctuation">)</span>
-将初始状态加入OPEN
-<span class="token keyword">while</span> OPEN<span class="token punctuation">:</span>
-	n⬅OPEN中弹出优先级最高的结点
-	将n加入CLOSE
-	如果n为终止结点<span class="token punctuation">:</span>
-		找n的parent，直到起始状态
-		<span class="token keyword">return</span>
-	遍历n的邻近结点m<span class="token punctuation">:</span>
-		如果m在CLOSE中<span class="token punctuation">:</span>
-			<span class="token keyword">continue</span>
-		如果m也不在OPEN中<span class="token punctuation">:</span>
-			设置m的parent为n
-			将m加入OPEN中<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<h3 id="Q-森林宝石的秘密通道"><a href="#Q-森林宝石的秘密通道" class="headerlink" title="Q: 森林宝石的秘密通道"></a>Q: 森林宝石的秘密通道</h3><p><strong>题目描述：</strong></p>
-<p>在一个神秘的森林里，有一块由9个小方格组成的魔法石板。石板上有8个宝石，每个宝石上刻有1-8中的一个数字(每个数字都不重复）。石板上还有一个空位，用0表示。通过移动空位周围的宝石，你可以改变宝石的位置。传说中，当宝石按照某个特定的顺序排列时(本题设为135702684)，魔法石板将会显露出通往一个宝藏的秘密通道。<br>现在，你站在这块魔法石板前，需要找到一种最少步骤的移动方法，将宝石排列成目标顺序。为了解开这个谜题，请使用A*算法来设计一个程序，帮助你从初始状态成功解锁秘密通道。</p>
-<p><strong>要求：要求只能用A*算法。</strong></p>
-<p><strong>输入格式：</strong>一行介个数字，空格用0表示，除0之外，分别表示从左到右从上到下的对应宝石上的数字。</p>
-<p><strong>输入格式：</strong>只有一行，该行只有一个数字，表示从初始状态到目标状态需要的最少移动次数(测试数据中无特殊无法到达目标状态数据)。</p>
-<p><strong>输入输出样例：</strong></p>
-<p>输入：150732684</p>
-<p>输出：2</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token comment"># 该函数返回启发式函数的值，current_node为当前结点矩阵，goal_node为目标结点矩阵</span>
-<span class="token keyword">def</span> <span class="token function">heuristic_f</span><span class="token punctuation">(</span>current_node<span class="token punctuation">,</span> goal_node<span class="token punctuation">)</span><span class="token punctuation">:</span>
-    h <span class="token operator">=</span> <span class="token number">0</span>
-    rows <span class="token operator">=</span> current_node<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
-    cols <span class="token operator">=</span> current_node<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
-    <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>rows<span class="token punctuation">)</span><span class="token punctuation">:</span>
-        <span class="token keyword">for</span> j <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span>cols<span class="token punctuation">)</span><span class="token punctuation">:</span>
-            <span class="token keyword">if</span> current_node<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token operator">!=</span> goal_node<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span> <span class="token keyword">and</span> current_node<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token operator">!=</span><span class="token number">0</span><span class="token punctuation">:</span>
-                goal_x <span class="token operator">=</span> np<span class="token punctuation">.</span>argwhere<span class="token punctuation">(</span>goal_node<span class="token operator">==</span>current_node<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span>
-                goal_y <span class="token operator">=</span> np<span class="token punctuation">.</span>argwhere<span class="token punctuation">(</span>goal_node<span class="token operator">==</span>current_node<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span>
-                h <span class="token operator">+=</span> <span class="token punctuation">(</span><span class="token builtin">abs</span><span class="token punctuation">(</span>i<span class="token operator">-</span>goal_x<span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token builtin">abs</span><span class="token punctuation">(</span>j<span class="token operator">-</span>goal_y<span class="token punctuation">)</span><span class="token punctuation">)</span>
-    <span class="token keyword">return</span> h<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-
-<p>将open_list定义为一个按照f升序排列的列表，其中为待展开的结点，close_list中存储已经展开的结点。当open_list不为空时，每次弹出第一个结点。</p>
-<pre class="line-numbers language-python" data-language="python"><code class="language-python"><span class="token keyword">def</span> <span class="token function">main</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-    <span class="token comment"># 每个结点用一个字典表示</span>
-    start <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
-    input_order <span class="token operator">=</span> <span class="token builtin">list</span><span class="token punctuation">(</span><span class="token builtin">input</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-    <span class="token comment"># 初始化3*3的输入矩阵</span>
-    input_order <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token builtin">int</span><span class="token punctuation">(</span>x<span class="token punctuation">)</span> <span class="token keyword">for</span> x <span class="token keyword">in</span> input_order<span class="token punctuation">]</span>
-    start_node <span class="token operator">=</span> np<span class="token punctuation">.</span>array<span class="token punctuation">(</span>input_order<span class="token punctuation">)</span><span class="token punctuation">.</span>reshape<span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">)</span>
-    start<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span> <span class="token operator">=</span> start_node
-    start<span class="token punctuation">[</span><span class="token string">'parent'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
-    start<span class="token punctuation">[</span><span class="token string">'steps'</span><span class="token punctuation">]</span> <span class="token operator">=</span> get_steps<span class="token punctuation">(</span>start<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-    start<span class="token punctuation">[</span><span class="token string">'g'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token number">0</span>
-    start<span class="token punctuation">[</span><span class="token string">'h'</span><span class="token punctuation">]</span> <span class="token operator">=</span> heuristic_f<span class="token punctuation">(</span>start<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">,</span> goal<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-    start<span class="token punctuation">[</span><span class="token string">'f'</span><span class="token punctuation">]</span> <span class="token operator">=</span> start<span class="token punctuation">[</span><span class="token string">'g'</span><span class="token punctuation">]</span> <span class="token operator">+</span> start<span class="token punctuation">[</span><span class="token string">'h'</span><span class="token punctuation">]</span>
-    <span class="token comment"># openlist中存储待展开的结点，closelist中存储已经展开的节点</span>
-    openlist <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-    closelist <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-    openlist<span class="token punctuation">.</span>append<span class="token punctuation">(</span>start<span class="token punctuation">)</span>
-    <span class="token keyword">while</span> openlist<span class="token punctuation">:</span>
-        current <span class="token operator">=</span> openlist<span class="token punctuation">.</span>pop<span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
-        closelist<span class="token punctuation">.</span>append<span class="token punctuation">(</span>current<span class="token punctuation">)</span>
-        <span class="token comment"># 如果当前展开的结点与目标结点一致，则返回</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>current<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span> <span class="token operator">==</span> goal<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">all</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-            <span class="token keyword">print</span><span class="token punctuation">(</span>current<span class="token punctuation">[</span><span class="token string">'g'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
-            p_list <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
-            p <span class="token operator">=</span> current
-            <span class="token keyword">while</span> p<span class="token punctuation">:</span>
-                p_list<span class="token punctuation">.</span>append<span class="token punctuation">(</span>p<span class="token punctuation">.</span>get<span class="token punctuation">(</span><span class="token string">'node'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
-                p <span class="token operator">=</span> p<span class="token punctuation">[</span><span class="token string">'parent'</span><span class="token punctuation">]</span>
-            p_list<span class="token punctuation">.</span>reverse<span class="token punctuation">(</span><span class="token punctuation">)</span>
-            <span class="token comment"># print(p_list)</span>
-            <span class="token keyword">return</span>
-        children <span class="token operator">=</span> get_children<span class="token punctuation">(</span>current<span class="token punctuation">)</span>
-        <span class="token keyword">for</span> child <span class="token keyword">in</span> children<span class="token punctuation">:</span>
-            <span class="token comment"># 判断该结点是否出现和待展开的结点列表和已经展开的结点列表</span>
-            exist_open <span class="token operator">=</span> <span class="token boolean">False</span>
-            exist_close <span class="token operator">=</span> <span class="token boolean">False</span>
-            <span class="token keyword">for</span> i <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>openlist<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-                <span class="token keyword">if</span> <span class="token punctuation">(</span>child<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span> <span class="token operator">==</span> openlist<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">all</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-                    exist_open <span class="token operator">=</span> <span class="token boolean">True</span>
-                    <span class="token comment"># 如果该孩子结点的f小于与它展开相等的在openlist结点的值，则用该孩子结点替代</span>
-                    <span class="token keyword">if</span> child<span class="token punctuation">[</span><span class="token string">'f'</span><span class="token punctuation">]</span> <span class="token operator">&lt;</span> openlist<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'f'</span><span class="token punctuation">]</span><span class="token punctuation">:</span>
-                        <span class="token keyword">del</span> openlist<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
-                        openlist<span class="token punctuation">.</span>append<span class="token punctuation">(</span>child<span class="token punctuation">)</span>
-                        <span class="token keyword">break</span>
-            <span class="token keyword">for</span> j <span class="token keyword">in</span> <span class="token builtin">range</span><span class="token punctuation">(</span><span class="token builtin">len</span><span class="token punctuation">(</span>closelist<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-                <span class="token keyword">if</span> <span class="token punctuation">(</span>child<span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span> <span class="token operator">==</span> closelist<span class="token punctuation">[</span>j<span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token string">'node'</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token builtin">all</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
-                    exist_close <span class="token operator">=</span> <span class="token boolean">True</span>
-                    <span class="token keyword">break</span>
-            <span class="token keyword">if</span> exist_open <span class="token operator">==</span> <span class="token boolean">False</span> <span class="token keyword">and</span> exist_close <span class="token operator">==</span> <span class="token boolean">False</span><span class="token punctuation">:</span>
-                openlist<span class="token punctuation">.</span>append<span class="token punctuation">(</span>child<span class="token punctuation">)</span>
-        openlist <span class="token operator">=</span> <span class="token builtin">sorted</span><span class="token punctuation">(</span>openlist<span class="token punctuation">,</span> key<span class="token operator">=</span>itemgetter<span class="token punctuation">(</span><span class="token string">'f'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-]]></content>
-      <categories>
-        <category>算法学习</category>
-      </categories>
-      <tags>
-        <tag>AI</tag>
       </tags>
   </entry>
 </search>
